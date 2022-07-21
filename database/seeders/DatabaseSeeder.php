@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Note;
 use App\Models\User;
+use Faker\Core\Number;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -16,19 +17,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
-        $user = User::factory(1)->create([
+        $users = User::factory(1)->create([
             'email' => 'test@test.com',
         ]);
 
-        Note::factory(10)->create([
-            'user_id' => $user[0]->id,
+        Note::factory(rand(3, 10))->create([
+            'user_id' => $users[0]->id,
         ]);
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Note;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NoteController extends Controller
 {
@@ -13,7 +15,9 @@ class NoteController extends Controller
      */
     public function index()
     {
-        //
+        return view('notes.index', [
+            'notes' => Note::where('user_id', Auth::id())->orderBy('updated_at', 'desc')->paginate(3),
+        ]);
     }
 
     /**
@@ -23,7 +27,7 @@ class NoteController extends Controller
      */
     public function create()
     {
-        //
+        return view('notes.create');
     }
 
     /**
@@ -34,51 +38,78 @@ class NoteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required',
+            'text' => 'required'
+        ]);
+
+        Note::create([
+            'title' => $request->input('title'),
+            'text' => $request->input('text'),
+            'user_id' => Auth::id()
+        ]);
+
+        return redirect()->route('notes.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Note  $note
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Note $note)
     {
-        //
+        return view('notes.show', [
+            'note' => $note,
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Note  $note
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Note $note)
     {
-        //
+        return view('notes.edit', [
+            'note' => $note,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Note  $note
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Note $note)
     {
-        //
+        $request->validate([
+            'title' => 'required',
+            'text' => 'required'
+        ]);
+
+        $note->update([
+            'title' => $request->input('title'),
+            'text' => $request->input('text')
+        ]);
+
+        return redirect()->route('notes.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Note  $note
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Note $note)
     {
-        //
+        $note->delete();
+
+        return redirect()->route('notes.index');
     }
 }

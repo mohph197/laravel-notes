@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Note>
  */
 class NoteFactory extends Factory
 {
@@ -17,7 +17,7 @@ class NoteFactory extends Factory
     public function definition()
     {
         return [
-            'title' => fake()->word(),
+            'title' => fake()->words(3, true),
             'text' => fake()->text(),
         ];
     }
