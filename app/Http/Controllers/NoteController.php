@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Note;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class NoteController extends Controller
 {
@@ -16,7 +15,7 @@ class NoteController extends Controller
     public function index()
     {
         return view('notes.index', [
-            'notes' => Note::where('user_id', Auth::id())->orderBy('updated_at', 'desc')->paginate(3),
+            'notes' => auth()->user()->notes()->orderBy('updated_at', 'desc')->paginate(3),
         ]);
     }
 
@@ -46,7 +45,7 @@ class NoteController extends Controller
         Note::create([
             'title' => $request->input('title'),
             'text' => $request->input('text'),
-            'user_id' => Auth::id()
+            'user_id' => auth()->id()
         ]);
 
         return redirect()->route('notes.index');
